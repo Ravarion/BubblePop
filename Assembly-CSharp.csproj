@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{7641F775-8F4C-604D-13FE-9815BA48D99F}</ProjectGuid>
+	<ProjectGuid>{3C1C9C37-147B-EC1A-FE7B-D412D511210B}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Bubble.cs" />
+     <Compile Include="Assets\Scripts\BubbleGen.cs" />
      <Compile Include="Assets\Scripts\Caster.cs" />
      <Compile Include="Assets\Scripts\Sprayer.cs" />
  <Reference Include="UnityEngine.UI">
