@@ -8,19 +8,19 @@ public class Sprayer : MonoBehaviour {
 	{
 		if(Input.GetKey(KeyCode.LeftArrow))
 		{
-			transform.Rotate(new Vector3(0,0,1));
+			transform.Rotate(new Vector3(0,0,3));
 		}
 		if(Input.GetKey(KeyCode.RightArrow))
 		{
-			transform.Rotate(new Vector3(0,0,-1));
+			transform.Rotate(new Vector3(0,0,-3));
 		}
 		if(Input.GetKey(KeyCode.A))
 		{
-			transform.Rotate(new Vector3(0,0,1));
+			transform.Rotate(new Vector3(0,0,3));
 		}
 		if(Input.GetKey(KeyCode.D))
 		{
-			transform.Rotate(new Vector3(0,0,-1));
+			transform.Rotate(new Vector3(0,0,-3));
 		}
 	}
 }
