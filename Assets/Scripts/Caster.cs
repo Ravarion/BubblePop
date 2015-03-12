@@ -48,40 +48,57 @@ public class Caster : MonoBehaviour {
 		bubbleShooters.Add(greenBubbleShooter);
 		bubbleShooters.Add(purpleBubbleShooter);
 		bubbleShooters.Add(yellowBubbleShooter);
-		updateNextShooter(true);
+		UpdateNextShooter(true);
 		bubbles = GameObject.Find("Bubbles");
 	}
 	
 	// Update is called once per frame
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.Space))
+		if(Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1"))
 		{
 			GameObject bubble = Instantiate(bubblePrefabs[curBubbleColor], transform.position, Quaternion.identity) as GameObject;
 			bubble.transform.SetParent(bubbles.transform);
 			bubble.GetComponent<Bubble>().Shooter();
-			updateNextShooter(false);
+			UpdateNextShooter(false);
+		}
+		if(Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || Input.GetButtonDown("Fire2"))
+		{
+			SwitchNextBubble();
 		}
 	}
 	
-	void updateNextShooter(bool initial)
+	void SwitchNextBubble()
+	{
+		int switchColor = curBubbleColor;
+		curBubbleColor = nextBubbleColor;
+		nextBubbleColor = switchColor;
+		ActivateBubbleIcons();
+	}
+	
+	void UpdateNextShooter(bool initial)
 	{
 		if(initial)
 		{
 			curBubbleColor = Random.Range(0,5);
+			nextBubbleColor = Random.Range(0,5);
 		}
 		else
 		{
 			curBubbleColor = nextBubbleColor;
+			nextBubbleColor = Random.Range(0,5);
 		}
-		
+		ActivateBubbleIcons();
+	}
+	
+	void ActivateBubbleIcons()
+	{
 		foreach(GameObject shooter in bubbleShooters)
 		{
 			shooter.SetActive(false);
 		}
 		bubbleShooters[curBubbleColor].SetActive(true);
 		
-		nextBubbleColor = Random.Range(0,5);
 		foreach(GameObject icon in bubbleIcons)
 		{
 			icon.SetActive(false);

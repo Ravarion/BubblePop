@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class Bubble : MonoBehaviour {
 	
 	public bool popped = false;
+	public bool isShooter = false;
+	public bool cursed = false;
 	
 	private float speed = 0.05f;
 	private float lastUpdate = 0f;
+	private float hitCountDown = 0f;
 	private bool move = true;
-	
-	public bool isShooter = false;
+	private bool countingDown = false;
 	
 	private List<GameObject> touching = new List<GameObject>();
 	
@@ -22,14 +25,39 @@ public class Bubble : MonoBehaviour {
 	// Update is called once per frame
 	void Update()
 	{
-		if(move)
+		if(move && touching.Count < 2)
 		{
 			transform.position = Vector2.MoveTowards(transform.position, transform.parent.position, Time.deltaTime * speed);
-			if(Time.time - lastUpdate > 3f)
+			if(cursed)
 			{
+				transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.parent.position.x+Random.Range(-0.8f,0.8f), transform.parent.position.y+Random.Range(-0.8f,0.8f)), Time.deltaTime*speed);
+			}
+			if(isShooter && hitCountDown < 0 && countingDown)
+			{
+				GameObject.Find("Bubbles").GetComponent<BubbleGen>().BreakMultiplier();
+				isShooter = false;
+				countingDown = false;
 				speed = 0.05f;
 			}
+			if(countingDown)
+			{
+				hitCountDown -= Time.deltaTime;
+			}
 		}
+		if(Mathf.Abs(transform.position.x) > 0.85f || Mathf.Abs (transform.position.y) > 0.85f)
+		{
+			LoseGame();
+		}
+	}
+	
+	private void LoseGame()
+	{
+		GameObject.Find("Bubbles").GetComponent<BubbleGen>().LoseGame();
+	}
+	
+	private void AddScore(int combo)
+	{
+		GameObject.Find("Bubbles").GetComponent<BubbleGen>().AddScore(combo);
 	}
 	
 	public void Shooter()
@@ -48,12 +76,17 @@ public class Bubble : MonoBehaviour {
 		{
 			if(collision.transform.GetComponent<SpriteRenderer>().color == transform.GetComponent<SpriteRenderer>().color)
 			{
-				Pop();
+				GameObject.Find("Bubbles").GetComponent<BubbleGen>().AddMultiplier();
+				Pop(0);
 			}
 			else
 			{
-				isShooter = false;
-				speed = 0.05f;
+				if(!(hitCountDown > 0))
+				{
+					hitCountDown = 1f;
+					countingDown = true;
+					speed = 0.05f;
+				}
 			}
 		}
 	}
@@ -63,8 +96,9 @@ public class Bubble : MonoBehaviour {
 		touching.Remove(collision.gameObject);
 	}
 	
-	public void Pop()
+	public void Pop(int combo)
 	{
+		combo++;
 		popped = true;
 		foreach(GameObject bubble in touching)
 		{
@@ -72,10 +106,11 @@ public class Bubble : MonoBehaviour {
 			{
 				if(!bubble.GetComponent<Bubble>().popped)
 				{
-					bubble.GetComponent<Bubble>().Pop();
+					bubble.GetComponent<Bubble>().Pop(combo);
 				}
 			}
 		}
+		AddScore(combo);
 		Destroy(gameObject);
 	}
 }
