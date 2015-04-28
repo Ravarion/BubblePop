@@ -1,10 +1,11 @@
 fileFormatVersion: 2
 guid: 4048319a9e688514bb8fd225a111f3b0
-timeCreated: 1426010452
+timeCreated: 1427416100
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - scorePlusCanvas: {fileID: 22369320, guid: 99575571f1483a24db7456184512afe8, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

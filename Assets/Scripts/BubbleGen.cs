@@ -10,6 +10,7 @@ public class BubbleGen : MonoBehaviour {
 	public int multiplier = 1;
 	
 	public string gameState = "Playing"; //Other options: "Menu","GameOver",etc...
+	public string gameMode = "Panic"; //Other options: "Puzzle", "Survival", "Panic"
 	
 	public GameObject redBubble;
 	public GameObject blueBubble;
@@ -21,7 +22,7 @@ public class BubbleGen : MonoBehaviour {
 	
 	private float spawnLatency = 1f;
 	private float lastSpawn = 0f;
-	private float rotationSpeed = 1f;
+	//private float rotationSpeed = 1f;
 	
 	private List<GameObject> bubbles = new List<GameObject>();
 	
@@ -34,7 +35,7 @@ public class BubbleGen : MonoBehaviour {
 		bubbles.Add(yellowBubble);
 		bubbles.Add(purpleBubble);
 		bubbles.Add(greenBubble);
-		SpawnInitial();
+		StartGame();
 	}
 	
 	// Update is called once per frame
@@ -55,23 +56,42 @@ public class BubbleGen : MonoBehaviour {
 		}
 	}
 	
+	public void SwitchGameMode(string newMode)
+	{
+		gameMode = newMode;
+		if(newMode == "Panic")
+		{
+			spawnLatency = 0.1f;
+		}
+		if(newMode == "Classic")
+		{
+			spawnLatency = 1f;
+		}
+		StartGame();
+	}
+	
 	public void LoseGame()
 	{
 		if(gameState == "Playing")
 		{
-			gameState = "GameOver";
+			StartGame();
 		}
 	}
 	
 	public void StartGame()
 	{
+		score = 0;
+		multiplier = 0;
+		UpdateText();
 		gameState = "Playing";
+		RemoveBubbles();
+		SpawnInitial();
 	}
 	
 	public void AddScore(int combo)
 	{
 		score += combo * multiplier;
-		scoreText.text = "Score: " + score + "\n" + "Multiplier: " + multiplier +"x";
+		UpdateText();
 	}
 	
 	public void AddMultiplier()
@@ -81,12 +101,17 @@ public class BubbleGen : MonoBehaviour {
 		{
 			multiplier = 99;
 		}
-		scoreText.text = "Score: " + score + "\n" + "Multiplier: " + multiplier +"x";
+		UpdateText();
 	}
 	
 	public void BreakMultiplier()
 	{
 		multiplier = 0;
+		UpdateText();
+	}
+	
+	private void UpdateText()
+	{
 		scoreText.text = "Score: " + score + "\n" + "Multiplier: " + multiplier +"x";
 	}
 	
@@ -97,6 +122,14 @@ public class BubbleGen : MonoBehaviour {
 			int color = Random.Range(0, 5);
 			GameObject bubble = Instantiate(bubbles[color], transform.position + new Vector3(Random.Range(-0.1f,0.1f),Random.Range(-0.1f,0.1f),0), Quaternion.identity) as GameObject;
 			bubble.transform.SetParent(this.transform);
+		}
+	}
+	
+	void RemoveBubbles()
+	{
+		for(int i = transform.childCount-1; i >= 0; i--)
+		{
+			transform.GetChild(i).GetComponent<Bubble>().Break();
 		}
 	}
 }

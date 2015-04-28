@@ -52,23 +52,15 @@ public class Caster : MonoBehaviour {
 		bubbles = GameObject.Find("Bubbles");
 	}
 	
-	// Update is called once per frame
-	void Update()
+	public void Shoot()
 	{
-		if(Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1"))
-		{
-			GameObject bubble = Instantiate(bubblePrefabs[curBubbleColor], transform.position, Quaternion.identity) as GameObject;
-			bubble.transform.SetParent(bubbles.transform);
-			bubble.GetComponent<Bubble>().Shooter();
-			UpdateNextShooter(false);
-		}
-		if(Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || Input.GetButtonDown("Fire2"))
-		{
-			SwitchNextBubble();
-		}
+		GameObject bubble = Instantiate(bubblePrefabs[curBubbleColor], transform.position, Quaternion.identity) as GameObject;
+		bubble.transform.SetParent(bubbles.transform);
+		bubble.GetComponent<Bubble>().Shooter();
+		UpdateNextShooter(false);
 	}
 	
-	void SwitchNextBubble()
+	public void SwitchNextBubble()
 	{
 		int switchColor = curBubbleColor;
 		curBubbleColor = nextBubbleColor;
